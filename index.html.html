@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבשלת חמה - כפר עזה</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #c77f3e;
+            --primary-dark: #a0632e;
+            --cream: #f9f5f0;
+            --beige: #e8ddd0;
+            --brown: #6b4423;
+            --text: #3d2817;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .site-title {
+            font-family: 'Alef', 'Heebo', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .quote {
+            max-width: 800px;
+            margin: 2rem auto 0;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+        }
+
+        .category-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .category-content {
+            padding: 1.5rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: var(--brown);
+            font-size: 0.9rem;
+        }
+
+        .recipes-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .recipes-section.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateX(4px);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--beige);
+        }
+
+        .recipes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .recipe-item {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-right: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.2s;
+        }
+
+        .recipe-item:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .recipe-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--brown);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recipes-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 class="site-title">🍳 מבשלת חמה 🍳</h1>
+    <p class="subtitle">ספר המתכונים של כפר עזה<br>מיטל כסלו ז"ל</p>
+    <div class="quote">
+        "מבשלת חמה - ביטוי שהומצא על-ידי יושע, דירניק בעברו, אשר נקעה נפשו מסתם סנדוויצ'ים בזמן העבודה ודרש, ואף קיבל, ארוחות חמות, מבושלות במיוחד ע"י תורנית בישול. עד היום נקראים תורני חימום האוכל בימי שישי בחדר האוכל בשם זה, אפילו אם התורנית היא... זכר."
+    </div>
+</div>
+
+<div class="container">
+    <div id="home" class="home-section">
+        <div class="categories-grid">
+            <div class="category-card" onclick="showCategory('siftah')">
+                <div class="category-content">
+                    <h2 class="category-title">🥗 סיפתח</h2>
+                    <p class="category-count">31 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('soups')">
+                <div class="category-content">
+                    <h2 class="category-title">🍲 מרקים</h2>
+                    <p class="category-count">15 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('mains')">
+                <div class="category-content">
+                    <h2 class="category-title">🍗 עיקריות</h2>
+                    <p class="category-count">31 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('sides')">
+                <div class="category-content">
+                    <h2 class="category-title">🥔 תוספות</h2>
+                    <p class="category-count">21 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('savory')">
+                <div class="category-content">
+                    <h2 class="category-title">🥖 מאפים מלוחים</h2>
+                    <p class="category-count">33 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('cakes')">
+                <div class="category-content">
+                    <h2 class="category-title">🎂 עוגות</h2>
+                    <p class="category-count">31 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('sweet')">
+                <div class="category-content">
+                    <h2 class="category-title">🍪 מאפים מתוקים</h2>
+                    <p class="category-count">16 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('desserts')">
+                <div class="category-content">
+                    <h2 class="category-title">🍨 קינוחים ופינוקים</h2>
+                    <p class="category-count">14 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('sauces')">
+                <div class="category-content">
+                    <h2 class="category-title">🥫 רטבים</h2>
+                    <p class="category-count">8 מתכונים</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Siftah -->
+    <div id="siftah" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">סיפתח</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">טבולה</div></div>
+            <div class="recipe-item"><div class="recipe-name">חציל במיץ תפוזים</div></div>
+            <div class="recipe-item"><div class="recipe-name">החצילים של הרי</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט החצילים של דודה שרה</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט פסטה קר</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט פרחוני</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט כרוב ואטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">ראשי שום בשמן זית</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט כרוב ברוטב</div></div>
+            <div class="recipe-item"><div class="recipe-name">מוח צמחוני</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט קוסקוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט טונה בתחמיץ</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט פטריות ותירס גמדי</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט הרינג ותפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט עגבניות שרי</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט מנגו</div></div>
+            <div class="recipe-item"><div class="recipe-name">מעדן ארטישוק ירושלמי</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט חסה עם אבוקדו וקרוטונים</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט חסה עם פטריות ובוטנים</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט פסטה ואבוקדו</div></div>
+            <div class="recipe-item"><div class="recipe-name">פסטה ברוטב יוגורט</div></div>
+            <div class="recipe-item"><div class="recipe-name">סלט חצילים לעצלנים</div></div>
+            <div class="recipe-item"><div class="recipe-name">קישואים במיקרו</div></div>
+            <div class="recipe-item"><div class="recipe-name">חצילים פיקנטים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פלפלים חמוצים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עגבניות מיובשות בשמן זית</div></div>
+            <div class="recipe-item"><div class="recipe-name">לבנה ביתית</div></div>
+            <div class="recipe-item"><div class="recipe-name">מטבוחה</div></div>
+            <div class="recipe-item"><div class="recipe-name">חביתת ירק</div></div>
+            <div class="recipe-item"><div class="recipe-name">שקשוקה - אביעד אדרי</div></div>
+            <div class="recipe-item"><div class="recipe-name">השקשוקה של אורלי</div></div>
+        </div>
+    </div>
+
+    <!-- Soups -->
+    <div id="soups" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">מרקים</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">מרק תירס</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק חמוץ עם כופתאות עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק עגבניות</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק קרם סלרי</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק ירוק חמוץ</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק עוף תימני</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק שעועית</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק תאילנדי</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק חומוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק דלעת</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק כרובית וברוקולי</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק בצל</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק עוף מתובל</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק קרם ירקות ירוקים</div></div>
+        </div>
+    </div>
+
+    <!-- Mains -->
+    <div id="mains" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">עיקריות</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">עוף בסגנון הודי</div></div>
+            <div class="recipe-item"><div class="recipe-name">צלי עוף שחום בבצל וצימוקים</div></div>
+            <div class="recipe-item"><div class="recipe-name">דג בתנור</div></div>
+            <div class="recipe-item"><div class="recipe-name">חריימה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קוביות עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">טשולנט 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">טשולנט 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף ברוטב שום ודבש</div></div>
+            <div class="recipe-item"><div class="recipe-name">בשר בקר בתנור</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף ממולא</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשוט עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">אחלה סיני</div></div>
+            <div class="recipe-item"><div class="recipe-name">צלי עוף מושחם עם תפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">חזה הודו פרוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">שוקיים מתוקות</div></div>
+            <div class="recipe-item"><div class="recipe-name">פילאף</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף מכסיקני</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף סצ'ואן</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף בדובדבנים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף בשמנת ופטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">קציצות טונה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קלופס עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף ואורז בקדירה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף בריבה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קציצות מטוגנות</div></div>
+            <div class="recipe-item"><div class="recipe-name">כדורי בשר ברוטב</div></div>
+            <div class="recipe-item"><div class="recipe-name">דגים חריפים אש</div></div>
+            <div class="recipe-item"><div class="recipe-name">קציצות עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">באן בשר מפורק</div></div>
+            <div class="recipe-item"><div class="recipe-name">רולדת בורקס בשר</div></div>
+            <div class="recipe-item"><div class="recipe-name">צלי בקר בתנור</div></div>
+        </div>
+    </div>
+
+    <!-- Sides -->
+    <div id="sides" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">תוספות</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">תפוחי אדמה אפויים</div></div>
+            <div class="recipe-item"><div class="recipe-name">קניידלך</div></div>
+            <div class="recipe-item"><div class="recipe-name">פאיג'ה</div></div>
+            <div class="recipe-item"><div class="recipe-name">מאפה בטטות ותפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">מאפה תפוחי אדמה בחלב</div></div>
+            <div class="recipe-item"><div class="recipe-name">כופתאות משמש</div></div>
+            <div class="recipe-item"><div class="recipe-name">לביבות בטטה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פסטה ברוטב שמנת ופטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">פסטה ברוטב אדום</div></div>
+            <div class="recipe-item"><div class="recipe-name">לזניה צמחונית</div></div>
+            <div class="recipe-item"><div class="recipe-name">רקוט קרומפלי</div></div>
+            <div class="recipe-item"><div class="recipe-name">לזניה ברוקולי בחרדל</div></div>
+            <div class="recipe-item"><div class="recipe-name">רושטי</div></div>
+            <div class="recipe-item"><div class="recipe-name">ירקות מעורבים</div></div>
+            <div class="recipe-item"><div class="recipe-name">תפוחי אדמה ברוזמרין</div></div>
+            <div class="recipe-item"><div class="recipe-name">כרובית מבושלת</div></div>
+            <div class="recipe-item"><div class="recipe-name">שורבה</div></div>
+            <div class="recipe-item"><div class="recipe-name">כרובית בתנור בטחינה</div></div>
+            <div class="recipe-item"><div class="recipe-name">החצילים של חורשי</div></div>
+            <div class="recipe-item"><div class="recipe-name">לביבות תפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">טוטוקפוסטו - כרוב ממולא הונגרי</div></div>
+        </div>
+    </div>
+
+    <!-- Savory Pastries -->
+    <div id="savory" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">מאפים מלוחים</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">ג'חנון 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">מאפה גבינות</div></div>
+            <div class="recipe-item"><div class="recipe-name">ג'חנון 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">תפחיות ביצים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת ברוקולי ותפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פיצה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פאי במילויים שונים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת בצל</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת קישואים ופטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">קיש ברוקולי</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת גבינה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת כרישה ועוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">טארט תרד</div></div>
+            <div class="recipe-item"><div class="recipe-name">חטיפי זיתים</div></div>
+            <div class="recipe-item"><div class="recipe-name">באגט משוכלל</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת רועים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פירושקי</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת גבינה 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">תפיחת גבינה</div></div>
+            <div class="recipe-item"><div class="recipe-name">בלינצ'ס פטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">בלנצ'ס טונה</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחמניות פיקנטיות</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחם בירה</div></div>
+            <div class="recipe-item"><div class="recipe-name">ככר לחם ממולא פטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">פיתות עם זעתר</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחם תבלינים</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחמניות בריאות 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחמניות בריאות 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">פוקאצ'ה</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחם אירי</div></div>
+            <div class="recipe-item"><div class="recipe-name">פלעצלך</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות מזרחיות</div></div>
+            <div class="recipe-item"><div class="recipe-name">מופלטה</div></div>
+        </div>
+    </div>
+
+    <!-- Cakes -->
+    <div id="cakes" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">עוגות</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">עוגת קצפת עם שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת דבש ותמרים</div></div>
+            <div class="recipe-item"><div class="recipe-name">רולדה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שוקולד קרה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת מוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">טורט אגוזים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה עם אוכמניות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת מנחה</div></div>
+            <div class="recipe-item"><div class="recipe-name">טורט שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת קפוצ'ינו</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שוקולד קפואה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת צ'יק צ'ק</div></div>
+            <div class="recipe-item"><div class="recipe-name">טורט עם קרם שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">רולדת שמרים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת תפוחים הפוכה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת קוקוס ומוס שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">פאי פקאן</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת מיץ תפוזים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה משולשת</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוד עוגת שוקולד קלה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת תפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת אננס</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שכבות חגיגית</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה 3</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת בריאות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת פרג וקוקוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה של מודי</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שוקולד עדינה (מתאימה לפסח)</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת ביסקויטים קרה</div></div>
+        </div>
+    </div>
+
+    <!-- Sweet Pastries -->
+    <div id="sweet" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">מאפים מתוקים</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">עוגיות מזולפות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות פריכות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות סבתא אלה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות תחרה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות שוקולד צ'יפס</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות מכסיקניות</div></div>
+            <div class="recipe-item"><div class="recipe-name">חומיות שמנת</div></div>
+            <div class="recipe-item"><div class="recipe-name">מעמול</div></div>
+            <div class="recipe-item"><div class="recipe-name">קוראסונים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות בשמת</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות שמרים במילוי תפוחי עץ</div></div>
+            <div class="recipe-item"><div class="recipe-name">פטיפורים קוקוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">כדורי טרוף שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות רחת לקום</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות סנדביץ</div></div>
+        </div>
+    </div>
+
+    <!-- Desserts -->
+    <div id="desserts" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">קינוחים ופינוקים</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">גרנולה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קינוח תות שדה</div></div>
+            <div class="recipe-item"><div class="recipe-name">מוס שלושת הצבעים</div></div>
+            <div class="recipe-item"><div class="recipe-name">מוס תפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פנקייק</div></div>
+            <div class="recipe-item"><div class="recipe-name">דגנים בשוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">רפרפת פאדג'</div></div>
+            <div class="recipe-item"><div class="recipe-name">גלידת מנגו</div></div>
+            <div class="recipe-item"><div class="recipe-name">מקפא קסום</div></div>
+            <div class="recipe-item"><div class="recipe-name">בוואריה</div></div>
+            <div class="recipe-item"><div class="recipe-name">אייס קפה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קולה דה מונו</div></div>
+            <div class="recipe-item"><div class="recipe-name">קוקטייל אביבי</div></div>
+        </div>
+    </div>
+
+    <!-- Sauces -->
+    <div id="sauces" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">רטבים</h2>
+        <div class="recipes-list">
+            <div class="recipe-item"><div class="recipe-name">רוטב חרדל</div></div>
+            <div class="recipe-item"><div class="recipe-name">צ'ימיצ'ורי</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב פקאנים לסלט</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב עגבניות עם בזיליקום</div></div>
+            <div class="recipe-item"><div class="recipe-name">צ'אטני תפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב פטריות עם שמנת</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב בצל סגול לסלט חסה</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב לסלט</div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCategory(categoryId) {
+    document.getElementById('home').style.display = 'none';
+    document.querySelectorAll('.recipes-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById(categoryId).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+function showHome() {
+    document.getElementById('home').style.display = 'block';
+    document.querySelectorAll('.recipes-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
