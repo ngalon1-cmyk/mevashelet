@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מבשלת חמה - כפר עזה</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Alef:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #c77f3e;
+            --primary-dark: #a0632e;
+            --cream: #f9f5f0;
+            --beige: #e8ddd0;
+            --brown: #6b4423;
+            --text: #3d2817;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .site-title {
+            font-family: 'Alef', 'Heebo', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .quote {
+            max-width: 800px;
+            margin: 2rem auto 0;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+        }
+
+        .category-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .category-content {
+            padding: 1.5rem;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: var(--brown);
+            font-size: 0.9rem;
+        }
+
+        .recipes-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .recipes-section.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateX(4px);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--beige);
+        }
+
+        .recipes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .recipe-item {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-right: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.2s;
+        }
+
+        .recipe-item:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .recipe-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--brown);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recipes-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 class="site-title">🍳 מבשלת חמה 🍳</h1>
+    <p class="subtitle">ספר המתכונים של כפר עזה<br>מיטל כסלו ז"ל</p>
+    <div class="quote">
+        "מבשלת חמה - ביטוי שהומצא על-ידי יושע, דירניק בעברו, אשר נקעה נפשו מסתם סנדוויצ'ים בזמן העבודה ודרש, ואף קיבל, ארוחות חמות, מבושלות במיוחד ע"י תורנית בישול. עד היום נקראים תורני חימום האוכל בימי שישי בחדר האוכל בשם זה, אפילו אם התורנית היא... זכר."
+    </div>
+</div>
+
+<div class="container">
+    <div id="home" class="home-section">
+        <div class="categories-grid">
+            <div class="category-card" onclick="showCategory('siftah')">
+                <div class="category-content">
+                    <h2 class="category-title">🥗 סיפתח</h2>
+                    <p class="category-count">31 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('soups')">
+                <div class="category-content">
+                    <h2 class="category-title">🍲 מרקים</h2>
+                    <p class="category-count">15 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('mains')">
+                <div class="category-content">
+                    <h2 class="category-title">🍗 עיקריות</h2>
+                    <p class="category-count">31 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('sides')">
+                <div class="category-content">
+                    <h2 class="category-title">🥔 תוספות</h2>
+                    <p class="category-count">21 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('savory')">
+                <div class="category-content">
+                    <h2 class="category-title">🥖 מאפים מלוחים</h2>
+                    <p class="category-count">33 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('cakes')">
+                <div class="category-content">
+                    <h2 class="category-title">🎂 עוגות</h2>
+                    <p class="category-count">31 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('sweet')">
+                <div class="category-content">
+                    <h2 class="category-title">🍪 מאפים מתוקים</h2>
+                    <p class="category-count">16 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('desserts')">
+                <div class="category-content">
+                    <h2 class="category-title">🍨 קינוחים ופינוקים</h2>
+                    <p class="category-count">14 מתכונים</p>
+                </div>
+            </div>
+
+            <div class="category-card" onclick="showCategory('sauces')">
+                <div class="category-content">
+                    <h2 class="category-title">🥫 רטבים</h2>
+                    <p class="category-count">8 מתכונים</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Siftah -->
+    <div id="siftah" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">סיפתח</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/טבולה" target="_blank" class="recipe-item"><div class="recipe-name">טבולה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/חציל-במיץ-תפוזים" target="_blank" class="recipe-item"><div class="recipe-name">חציל במיץ תפוזים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/החצילים-של-הרי" target="_blank" class="recipe-item"><div class="recipe-name">החצילים של הרי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-החצילים-של-דודה-שרה" target="_blank" class="recipe-item"><div class="recipe-name">סלט החצילים של דודה שרה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-פסטה-קר" target="_blank" class="recipe-item"><div class="recipe-name">סלט פסטה קר</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-פרחוני" target="_blank" class="recipe-item"><div class="recipe-name">סלט פרחוני</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-כרוב-ואטריות" target="_blank" class="recipe-item"><div class="recipe-name">סלט כרוב ואטריות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/ראשי-שום-בשמן-זית" target="_blank" class="recipe-item"><div class="recipe-name">ראשי שום בשמן זית</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-כרוב-ברוטב" target="_blank" class="recipe-item"><div class="recipe-name">סלט כרוב ברוטב</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/מוח-צמחוני" target="_blank" class="recipe-item"><div class="recipe-name">מוח צמחוני</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-קוסקוס" target="_blank" class="recipe-item"><div class="recipe-name">סלט קוסקוס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-טונה-בתחמיץ" target="_blank" class="recipe-item"><div class="recipe-name">סלט טונה בתחמיץ</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-פטריות-ותירס-גמדי" target="_blank" class="recipe-item"><div class="recipe-name">סלט פטריות ותירס גמדי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-הרינג-ותפוחים" target="_blank" class="recipe-item"><div class="recipe-name">סלט הרינג ותפוחים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-עגבניות-שרי" target="_blank" class="recipe-item"><div class="recipe-name">סלט עגבניות שרי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-מנגו" target="_blank" class="recipe-item"><div class="recipe-name">סלט מנגו</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/מעדן-ארטישוק-ירושלמי" target="_blank" class="recipe-item"><div class="recipe-name">מעדן ארטישוק ירושלמי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-חסה-עם-אבוקדו-וקרוטונים" target="_blank" class="recipe-item"><div class="recipe-name">סלט חסה עם אבוקדו וקרוטונים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-חסה-עם-פטריות-ובוטנים" target="_blank" class="recipe-item"><div class="recipe-name">סלט חסה עם פטריות ובוטנים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-פסטה-ואבוקדו" target="_blank" class="recipe-item"><div class="recipe-name">סלט פסטה ואבוקדו</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/פסטה-ברוטב-יוגורט" target="_blank" class="recipe-item"><div class="recipe-name">פסטה ברוטב יוגורט</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/סלט-חצילים-לעצלנים" target="_blank" class="recipe-item"><div class="recipe-name">סלט חצילים לעצלנים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/קישואים-במיקרו" target="_blank" class="recipe-item"><div class="recipe-name">קישואים במיקרו</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/חצילים-פיקנטים" target="_blank" class="recipe-item"><div class="recipe-name">חצילים פיקנטים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/פלפלים-חמוצים" target="_blank" class="recipe-item"><div class="recipe-name">פלפלים חמוצים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/עגבניות-מיובשות-בשמן-זית" target="_blank" class="recipe-item"><div class="recipe-name">עגבניות מיובשות בשמן זית</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/לבנה-ביתית" target="_blank" class="recipe-item"><div class="recipe-name">לבנה ביתית</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/מטבוחה" target="_blank" class="recipe-item"><div class="recipe-name">מטבוחה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/חביתת-ירק" target="_blank" class="recipe-item"><div class="recipe-name">חביתת ירק</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/שקשוקה-אביעד-אדרי" target="_blank" class="recipe-item"><div class="recipe-name">שקשוקה - אביעד אדרי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/סיפתח/השקשוקה-של-אורלי" target="_blank" class="recipe-item"><div class="recipe-name">השקשוקה של אורלי</div></a>
+        </div>
+    </div>
+
+    <!-- Soups -->
+    <div id="soups" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">מרקים</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-תירס" target="_blank" class="recipe-item"><div class="recipe-name">מרק תירס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-חמוץ-עם-כופתאות-עוף" target="_blank" class="recipe-item"><div class="recipe-name">מרק חמוץ עם כופתאות עוף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-עגבניות" target="_blank" class="recipe-item"><div class="recipe-name">מרק עגבניות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-קרם-סלרי" target="_blank" class="recipe-item"><div class="recipe-name">מרק קרם סלרי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-ירוק-חמוץ" target="_blank" class="recipe-item"><div class="recipe-name">מרק ירוק חמוץ</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-עוף-תימני" target="_blank" class="recipe-item"><div class="recipe-name">מרק עוף תימני</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-שעועית" target="_blank" class="recipe-item"><div class="recipe-name">מרק שעועית</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-תאילנדי" target="_blank" class="recipe-item"><div class="recipe-name">מרק תאילנדי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-חומוס" target="_blank" class="recipe-item"><div class="recipe-name">מרק חומוס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-דלעת" target="_blank" class="recipe-item"><div class="recipe-name">מרק דלעת</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-כרובית-וברוקולי" target="_blank" class="recipe-item"><div class="recipe-name">מרק כרובית וברוקולי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-בצל" target="_blank" class="recipe-item"><div class="recipe-name">מרק בצל</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-עוף-מתובל" target="_blank" class="recipe-item"><div class="recipe-name">מרק עוף מתובל</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מרקים/מרק-קרם-ירקות-ירוקים" target="_blank" class="recipe-item"><div class="recipe-name">מרק קרם ירקות ירוקים</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק חמוץ עם כופתאות עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק עגבניות</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק קרם סלרי</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק ירוק חמוץ</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק עוף תימני</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק שעועית</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק תאילנדי</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק חומוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק דלעת</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק כרובית וברוקולי</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק בצל</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק עוף מתובל</div></div>
+            <div class="recipe-item"><div class="recipe-name">מרק קרם ירקות ירוקים</div></div>
+        </div>
+    </div>
+
+    <!-- Mains -->
+    <div id="mains" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">עיקריות</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-בסגנון-הודי" target="_blank" class="recipe-item"><div class="recipe-name">עוף בסגנון הודי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/צלי-עוף-שחום-בבצל-וצימוקים" target="_blank" class="recipe-item"><div class="recipe-name">צלי עוף שחום בבצל וצימוקים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/דג-בתנור" target="_blank" class="recipe-item"><div class="recipe-name">דג בתנור</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/חריימה" target="_blank" class="recipe-item"><div class="recipe-name">חריימה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/קוביות-עוף" target="_blank" class="recipe-item"><div class="recipe-name">קוביות עוף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/טשולנט-1" target="_blank" class="recipe-item"><div class="recipe-name">טשולנט 1</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/טשולנט-2" target="_blank" class="recipe-item"><div class="recipe-name">טשולנט 2</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-ברוטב-שום-ודבש" target="_blank" class="recipe-item"><div class="recipe-name">עוף ברוטב שום ודבש</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/בשר-בקר-בתנור" target="_blank" class="recipe-item"><div class="recipe-name">בשר בקר בתנור</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-ממולא" target="_blank" class="recipe-item"><div class="recipe-name">עוף ממולא</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/פשוט-עוף" target="_blank" class="recipe-item"><div class="recipe-name">פשוט עוף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/אחלה-סיני" target="_blank" class="recipe-item"><div class="recipe-name">אחלה סיני</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/צלי-עוף-מושחם-עם-תפוחי-אדמה" target="_blank" class="recipe-item"><div class="recipe-name">צלי עוף מושחם עם תפוחי אדמה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/חזה-הודו-פרוס" target="_blank" class="recipe-item"><div class="recipe-name">חזה הודו פרוס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/שוקיים-מתוקות" target="_blank" class="recipe-item"><div class="recipe-name">שוקיים מתוקות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/פילאף" target="_blank" class="recipe-item"><div class="recipe-name">פילאף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-מכסיקני" target="_blank" class="recipe-item"><div class="recipe-name">עוף מכסיקני</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-סצואן" target="_blank" class="recipe-item"><div class="recipe-name">עוף סצ'ואן</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-בדובדבנים" target="_blank" class="recipe-item"><div class="recipe-name">עוף בדובדבנים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-בשמנת-ופטריות" target="_blank" class="recipe-item"><div class="recipe-name">עוף בשמנת ופטריות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/קציצות-טונה" target="_blank" class="recipe-item"><div class="recipe-name">קציצות טונה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/קלופס-עוף" target="_blank" class="recipe-item"><div class="recipe-name">קלופס עוף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-ואורז-בקדירה" target="_blank" class="recipe-item"><div class="recipe-name">עוף ואורז בקדירה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/עוף-בריבה" target="_blank" class="recipe-item"><div class="recipe-name">עוף בריבה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/קציצות-מטוגנות" target="_blank" class="recipe-item"><div class="recipe-name">קציצות מטוגנות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/כדורי-בשר-ברוטב" target="_blank" class="recipe-item"><div class="recipe-name">כדורי בשר ברוטב</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/דגים-חריפים-אש" target="_blank" class="recipe-item"><div class="recipe-name">דגים חריפים אש</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/קציצות-עוף" target="_blank" class="recipe-item"><div class="recipe-name">קציצות עוף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/באן-בשר-מפורק" target="_blank" class="recipe-item"><div class="recipe-name">באן בשר מפורק</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/רולדת-בורקס-בשר" target="_blank" class="recipe-item"><div class="recipe-name">רולדת בורקס בשר</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עיקריות/צלי-בקר-בתנור" target="_blank" class="recipe-item"><div class="recipe-name">צלי בקר בתנור</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">צלי עוף שחום בבצל וצימוקים</div></div>
+            <div class="recipe-item"><div class="recipe-name">דג בתנור</div></div>
+            <div class="recipe-item"><div class="recipe-name">חריימה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קוביות עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">טשולנט 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">טשולנט 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף ברוטב שום ודבש</div></div>
+            <div class="recipe-item"><div class="recipe-name">בשר בקר בתנור</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף ממולא</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשוט עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">אחלה סיני</div></div>
+            <div class="recipe-item"><div class="recipe-name">צלי עוף מושחם עם תפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">חזה הודו פרוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">שוקיים מתוקות</div></div>
+            <div class="recipe-item"><div class="recipe-name">פילאף</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף מכסיקני</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף סצ'ואן</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף בדובדבנים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף בשמנת ופטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">קציצות טונה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קלופס עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף ואורז בקדירה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוף בריבה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קציצות מטוגנות</div></div>
+            <div class="recipe-item"><div class="recipe-name">כדורי בשר ברוטב</div></div>
+            <div class="recipe-item"><div class="recipe-name">דגים חריפים אש</div></div>
+            <div class="recipe-item"><div class="recipe-name">קציצות עוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">באן בשר מפורק</div></div>
+            <div class="recipe-item"><div class="recipe-name">רולדת בורקס בשר</div></div>
+            <div class="recipe-item"><div class="recipe-name">צלי בקר בתנור</div></div>
+        </div>
+    </div>
+
+    <!-- Sides -->
+    <div id="sides" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">תוספות</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/תוספות/תפוחי-אדמה-אפויים" target="_blank" class="recipe-item"><div class="recipe-name">תפוחי אדמה אפויים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/קניידלך" target="_blank" class="recipe-item"><div class="recipe-name">קניידלך</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/פאיגה" target="_blank" class="recipe-item"><div class="recipe-name">פאיג'ה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/מאפה-בטטות-ותפוחי-אדמה" target="_blank" class="recipe-item"><div class="recipe-name">מאפה בטטות ותפוחי אדמה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/מאפה-תפוחי-אדמה-בחלב" target="_blank" class="recipe-item"><div class="recipe-name">מאפה תפוחי אדמה בחלב</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/כופתאות-משמש" target="_blank" class="recipe-item"><div class="recipe-name">כופתאות משמש</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/לביבות-בטטה" target="_blank" class="recipe-item"><div class="recipe-name">לביבות בטטה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/פסטה-ברוטב-שמנת-ופטריות" target="_blank" class="recipe-item"><div class="recipe-name">פסטה ברוטב שמנת ופטריות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/פסטה-ברוטב-אדום" target="_blank" class="recipe-item"><div class="recipe-name">פסטה ברוטב אדום</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/לזניה-צמחונית" target="_blank" class="recipe-item"><div class="recipe-name">לזניה צמחונית</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/רקוט-קרומפלי" target="_blank" class="recipe-item"><div class="recipe-name">רקוט קרומפלי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/לזניה-ברוקולי-בחרדל" target="_blank" class="recipe-item"><div class="recipe-name">לזניה ברוקולי בחרדל</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/רושטי" target="_blank" class="recipe-item"><div class="recipe-name">רושטי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/ירקות-מעורבים" target="_blank" class="recipe-item"><div class="recipe-name">ירקות מעורבים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/תפוחי-אדמה-ברוזמרין" target="_blank" class="recipe-item"><div class="recipe-name">תפוחי אדמה ברוזמרין</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/כרובית-מבושלת" target="_blank" class="recipe-item"><div class="recipe-name">כרובית מבושלת</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/שורבה" target="_blank" class="recipe-item"><div class="recipe-name">שורבה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/כרובית-בתנור-בטחינה" target="_blank" class="recipe-item"><div class="recipe-name">כרובית בתנור בטחינה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/החצילים-של-חורשי" target="_blank" class="recipe-item"><div class="recipe-name">החצילים של חורשי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/לביבות-תפוחי-אדמה" target="_blank" class="recipe-item"><div class="recipe-name">לביבות תפוחי אדמה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/תוספות/טוטוקפוסטו-כרוב-ממולא-הונגרי" target="_blank" class="recipe-item"><div class="recipe-name">טוטוקפוסטו - כרוב ממולא הונגרי</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">קניידלך</div></div>
+            <div class="recipe-item"><div class="recipe-name">פאיג'ה</div></div>
+            <div class="recipe-item"><div class="recipe-name">מאפה בטטות ותפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">מאפה תפוחי אדמה בחלב</div></div>
+            <div class="recipe-item"><div class="recipe-name">כופתאות משמש</div></div>
+            <div class="recipe-item"><div class="recipe-name">לביבות בטטה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פסטה ברוטב שמנת ופטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">פסטה ברוטב אדום</div></div>
+            <div class="recipe-item"><div class="recipe-name">לזניה צמחונית</div></div>
+            <div class="recipe-item"><div class="recipe-name">רקוט קרומפלי</div></div>
+            <div class="recipe-item"><div class="recipe-name">לזניה ברוקולי בחרדל</div></div>
+            <div class="recipe-item"><div class="recipe-name">רושטי</div></div>
+            <div class="recipe-item"><div class="recipe-name">ירקות מעורבים</div></div>
+            <div class="recipe-item"><div class="recipe-name">תפוחי אדמה ברוזמרין</div></div>
+            <div class="recipe-item"><div class="recipe-name">כרובית מבושלת</div></div>
+            <div class="recipe-item"><div class="recipe-name">שורבה</div></div>
+            <div class="recipe-item"><div class="recipe-name">כרובית בתנור בטחינה</div></div>
+            <div class="recipe-item"><div class="recipe-name">החצילים של חורשי</div></div>
+            <div class="recipe-item"><div class="recipe-name">לביבות תפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">טוטוקפוסטו - כרוב ממולא הונגרי</div></div>
+        </div>
+    </div>
+
+    <!-- Savory Pastries -->
+    <div id="savory" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">מאפים מלוחים</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/גחנון-1" target="_blank" class="recipe-item"><div class="recipe-name">ג'חנון 1</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/מאפה-גבינות" target="_blank" class="recipe-item"><div class="recipe-name">מאפה גבינות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/גחנון-2" target="_blank" class="recipe-item"><div class="recipe-name">ג'חנון 2</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/תפחיות-ביצים" target="_blank" class="recipe-item"><div class="recipe-name">תפחיות ביצים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-ברוקולי-ותפוחי-אדמה" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת ברוקולי ותפוחי אדמה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פיצה" target="_blank" class="recipe-item"><div class="recipe-name">פיצה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פאי-במילויים-שונים" target="_blank" class="recipe-item"><div class="recipe-name">פאי במילויים שונים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-בצל" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת בצל</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-קישואים-ופטריות" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת קישואים ופטריות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/קיש-ברוקולי" target="_blank" class="recipe-item"><div class="recipe-name">קיש ברוקולי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-גבינה" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת גבינה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-כרישה-ועוף" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת כרישה ועוף</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/טארט-תרד" target="_blank" class="recipe-item"><div class="recipe-name">טארט תרד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/חטיפי-זיתים" target="_blank" class="recipe-item"><div class="recipe-name">חטיפי זיתים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/באגט-משוכלל" target="_blank" class="recipe-item"><div class="recipe-name">באגט משוכלל</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-רועים" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת רועים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פירושקי" target="_blank" class="recipe-item"><div class="recipe-name">פירושקי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פשטידת-גבינה-2" target="_blank" class="recipe-item"><div class="recipe-name">פשטידת גבינה 2</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/תפיחת-גבינה" target="_blank" class="recipe-item"><div class="recipe-name">תפיחת גבינה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/בלינצס-פטריות" target="_blank" class="recipe-item"><div class="recipe-name">בלינצ'ס פטריות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/בלנצס-טונה" target="_blank" class="recipe-item"><div class="recipe-name">בלנצ'ס טונה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/לחמניות-פיקנטיות" target="_blank" class="recipe-item"><div class="recipe-name">לחמניות פיקנטיות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/לחם-בירה" target="_blank" class="recipe-item"><div class="recipe-name">לחם בירה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/ככר-לחם-ממולא-פטריות" target="_blank" class="recipe-item"><div class="recipe-name">ככר לחם ממולא פטריות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פיתות-עם-זעתר" target="_blank" class="recipe-item"><div class="recipe-name">פיתות עם זעתר</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/לחם-תבלינים" target="_blank" class="recipe-item"><div class="recipe-name">לחם תבלינים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/לחמניות-בריאות-1" target="_blank" class="recipe-item"><div class="recipe-name">לחמניות בריאות 1</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/לחמניות-בריאות-2" target="_blank" class="recipe-item"><div class="recipe-name">לחמניות בריאות 2</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פוקאצה" target="_blank" class="recipe-item"><div class="recipe-name">פוקאצ'ה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/לחם-אירי" target="_blank" class="recipe-item"><div class="recipe-name">לחם אירי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/פלעצלך" target="_blank" class="recipe-item"><div class="recipe-name">פלעצלך</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/עוגיות-מזרחיות" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות מזרחיות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מלוחים/מופלטה" target="_blank" class="recipe-item"><div class="recipe-name">מופלטה</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">מאפה גבינות</div></div>
+            <div class="recipe-item"><div class="recipe-name">ג'חנון 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">תפחיות ביצים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת ברוקולי ותפוחי אדמה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פיצה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פאי במילויים שונים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת בצל</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת קישואים ופטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">קיש ברוקולי</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת גבינה</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת כרישה ועוף</div></div>
+            <div class="recipe-item"><div class="recipe-name">טארט תרד</div></div>
+            <div class="recipe-item"><div class="recipe-name">חטיפי זיתים</div></div>
+            <div class="recipe-item"><div class="recipe-name">באגט משוכלל</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת רועים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פירושקי</div></div>
+            <div class="recipe-item"><div class="recipe-name">פשטידת גבינה 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">תפיחת גבינה</div></div>
+            <div class="recipe-item"><div class="recipe-name">בלינצ'ס פטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">בלנצ'ס טונה</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחמניות פיקנטיות</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחם בירה</div></div>
+            <div class="recipe-item"><div class="recipe-name">ככר לחם ממולא פטריות</div></div>
+            <div class="recipe-item"><div class="recipe-name">פיתות עם זעתר</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחם תבלינים</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחמניות בריאות 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחמניות בריאות 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">פוקאצ'ה</div></div>
+            <div class="recipe-item"><div class="recipe-name">לחם אירי</div></div>
+            <div class="recipe-item"><div class="recipe-name">פלעצלך</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות מזרחיות</div></div>
+            <div class="recipe-item"><div class="recipe-name">מופלטה</div></div>
+        </div>
+    </div>
+
+    <!-- Cakes -->
+    <div id="cakes" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">עוגות</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-קצפת-עם-שוקולד" target="_blank" class="recipe-item"><div class="recipe-name">עוגת קצפת עם שוקולד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-דבש-ותמרים" target="_blank" class="recipe-item"><div class="recipe-name">עוגת דבש ותמרים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/רולדה" target="_blank" class="recipe-item"><div class="recipe-name">רולדה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-גבינה-1" target="_blank" class="recipe-item"><div class="recipe-name">עוגת גבינה 1</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-שוקולד-קרה" target="_blank" class="recipe-item"><div class="recipe-name">עוגת שוקולד קרה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-מוס" target="_blank" class="recipe-item"><div class="recipe-name">עוגת מוס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/טורט-אגוזים" target="_blank" class="recipe-item"><div class="recipe-name">טורט אגוזים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-גבינה-עם-אוכמניות" target="_blank" class="recipe-item"><div class="recipe-name">עוגת גבינה עם אוכמניות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-מנחה" target="_blank" class="recipe-item"><div class="recipe-name">עוגת מנחה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/טורט-שוקולד" target="_blank" class="recipe-item"><div class="recipe-name">טורט שוקולד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-קפוצינו" target="_blank" class="recipe-item"><div class="recipe-name">עוגת קפוצ'ינו</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-שוקולד-קפואה" target="_blank" class="recipe-item"><div class="recipe-name">עוגת שוקולד קפואה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-ציק-צק" target="_blank" class="recipe-item"><div class="recipe-name">עוגת צ'יק צ'ק</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/טורט-עם-קרם-שוקולד" target="_blank" class="recipe-item"><div class="recipe-name">טורט עם קרם שוקולד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/רולדת-שמרים" target="_blank" class="recipe-item"><div class="recipe-name">רולדת שמרים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-גבינה-2" target="_blank" class="recipe-item"><div class="recipe-name">עוגת גבינה 2</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-תפוחים-הפוכה" target="_blank" class="recipe-item"><div class="recipe-name">עוגת תפוחים הפוכה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-קוקוס-ומוס-שוקולד" target="_blank" class="recipe-item"><div class="recipe-name">עוגת קוקוס ומוס שוקולד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/פאי-פקאן" target="_blank" class="recipe-item"><div class="recipe-name">פאי פקאן</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-מיץ-תפוזים" target="_blank" class="recipe-item"><div class="recipe-name">עוגת מיץ תפוזים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-גבינה-משולשת" target="_blank" class="recipe-item"><div class="recipe-name">עוגת גבינה משולשת</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוד-עוגת-שוקולד-קלה" target="_blank" class="recipe-item"><div class="recipe-name">עוד עוגת שוקולד קלה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-תפוחים" target="_blank" class="recipe-item"><div class="recipe-name">עוגת תפוחים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-אננס" target="_blank" class="recipe-item"><div class="recipe-name">עוגת אננס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-שכבות-חגיגית" target="_blank" class="recipe-item"><div class="recipe-name">עוגת שכבות חגיגית</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-גבינה-3" target="_blank" class="recipe-item"><div class="recipe-name">עוגת גבינה 3</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-בריאות" target="_blank" class="recipe-item"><div class="recipe-name">עוגת בריאות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-פרג-וקוקוס" target="_blank" class="recipe-item"><div class="recipe-name">עוגת פרג וקוקוס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-גבינה-של-מודי" target="_blank" class="recipe-item"><div class="recipe-name">עוגת גבינה של מודי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-שוקולד-עדינה-מתאימה-לפסח" target="_blank" class="recipe-item"><div class="recipe-name">עוגת שוקולד עדינה (מתאימה לפסח)</div></a>
+            <a href="https://sites.google.com/view/mevashelet/עוגות/עוגת-ביסקויטים-קרה" target="_blank" class="recipe-item"><div class="recipe-name">עוגת ביסקויטים קרה</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת דבש ותמרים</div></div>
+            <div class="recipe-item"><div class="recipe-name">רולדה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה 1</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שוקולד קרה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת מוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">טורט אגוזים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה עם אוכמניות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת מנחה</div></div>
+            <div class="recipe-item"><div class="recipe-name">טורט שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת קפוצ'ינו</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שוקולד קפואה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת צ'יק צ'ק</div></div>
+            <div class="recipe-item"><div class="recipe-name">טורט עם קרם שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">רולדת שמרים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה 2</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת תפוחים הפוכה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת קוקוס ומוס שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">פאי פקאן</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת מיץ תפוזים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה משולשת</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוד עוגת שוקולד קלה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת תפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת אננס</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שכבות חגיגית</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה 3</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת בריאות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת פרג וקוקוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת גבינה של מודי</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת שוקולד עדינה (מתאימה לפסח)</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגת ביסקויטים קרה</div></div>
+        </div>
+    </div>
+
+    <!-- Sweet Pastries -->
+    <div id="sweet" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">מאפים מתוקים</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-מזולפות" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות מזולפות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-פריכות" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות פריכות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-סבתא-אלה" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות סבתא אלה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-תחרה" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות תחרה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-שוקולד-ציפס" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות שוקולד צ'יפס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-מכסיקניות" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות מכסיקניות</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/חומיות-שמנת" target="_blank" class="recipe-item"><div class="recipe-name">חומיות שמנת</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/מעמול" target="_blank" class="recipe-item"><div class="recipe-name">מעמול</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/קוראסונים" target="_blank" class="recipe-item"><div class="recipe-name">קוראסונים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-בשמת" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות בשמת</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-שמרים-במילוי-תפוחי-עץ" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות שמרים במילוי תפוחי עץ</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/פטיפורים-קוקוס" target="_blank" class="recipe-item"><div class="recipe-name">פטיפורים קוקוס</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/כדורי-טרוף-שוקולד" target="_blank" class="recipe-item"><div class="recipe-name">כדורי טרוף שוקולד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-רחת-לקום" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות רחת לקום</div></a>
+            <a href="https://sites.google.com/view/mevashelet/מאפים-מתוקים/עוגיות-סנדביץ" target="_blank" class="recipe-item"><div class="recipe-name">עוגיות סנדביץ</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות פריכות</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות סבתא אלה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות תחרה</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות שוקולד צ'יפס</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות מכסיקניות</div></div>
+            <div class="recipe-item"><div class="recipe-name">חומיות שמנת</div></div>
+            <div class="recipe-item"><div class="recipe-name">מעמול</div></div>
+            <div class="recipe-item"><div class="recipe-name">קוראסונים</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות בשמת</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות שמרים במילוי תפוחי עץ</div></div>
+            <div class="recipe-item"><div class="recipe-name">פטיפורים קוקוס</div></div>
+            <div class="recipe-item"><div class="recipe-name">כדורי טרוף שוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות רחת לקום</div></div>
+            <div class="recipe-item"><div class="recipe-name">עוגיות סנדביץ</div></div>
+        </div>
+    </div>
+
+    <!-- Desserts -->
+    <div id="desserts" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">קינוחים ופינוקים</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/גרנולה" target="_blank" class="recipe-item"><div class="recipe-name">גרנולה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/קינוח-תות-שדה" target="_blank" class="recipe-item"><div class="recipe-name">קינוח תות שדה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/מוס-שלושת-הצבעים" target="_blank" class="recipe-item"><div class="recipe-name">מוס שלושת הצבעים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/מוס-תפוחים" target="_blank" class="recipe-item"><div class="recipe-name">מוס תפוחים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/פנקייק" target="_blank" class="recipe-item"><div class="recipe-name">פנקייק</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/דגנים-בשוקולד" target="_blank" class="recipe-item"><div class="recipe-name">דגנים בשוקולד</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/רפרפת-פאדג" target="_blank" class="recipe-item"><div class="recipe-name">רפרפת פאדג'</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/גלידת-מנגו" target="_blank" class="recipe-item"><div class="recipe-name">גלידת מנגו</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/מקפא-קסום" target="_blank" class="recipe-item"><div class="recipe-name">מקפא קסום</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/בוואריה" target="_blank" class="recipe-item"><div class="recipe-name">בוואריה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/אייס-קפה" target="_blank" class="recipe-item"><div class="recipe-name">אייס קפה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/קולה-דה-מונו" target="_blank" class="recipe-item"><div class="recipe-name">קולה דה מונו</div></a>
+            <a href="https://sites.google.com/view/mevashelet/קינוחים-ופינוקים/קוקטייל-אביבי" target="_blank" class="recipe-item"><div class="recipe-name">קוקטייל אביבי</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">קינוח תות שדה</div></div>
+            <div class="recipe-item"><div class="recipe-name">מוס שלושת הצבעים</div></div>
+            <div class="recipe-item"><div class="recipe-name">מוס תפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">פנקייק</div></div>
+            <div class="recipe-item"><div class="recipe-name">דגנים בשוקולד</div></div>
+            <div class="recipe-item"><div class="recipe-name">רפרפת פאדג'</div></div>
+            <div class="recipe-item"><div class="recipe-name">גלידת מנגו</div></div>
+            <div class="recipe-item"><div class="recipe-name">מקפא קסום</div></div>
+            <div class="recipe-item"><div class="recipe-name">בוואריה</div></div>
+            <div class="recipe-item"><div class="recipe-name">אייס קפה</div></div>
+            <div class="recipe-item"><div class="recipe-name">קולה דה מונו</div></div>
+            <div class="recipe-item"><div class="recipe-name">קוקטייל אביבי</div></div>
+        </div>
+    </div>
+
+    <!-- Sauces -->
+    <div id="sauces" class="recipes-section">
+        <button class="back-btn" onclick="showHome()">← חזרה לעמוד הראשי</button>
+        <h2 class="section-title">רטבים</h2>
+        <div class="recipes-list">
+            <a href="https://sites.google.com/view/mevashelet/רטבים/רוטב-חרדל" target="_blank" class="recipe-item"><div class="recipe-name">רוטב חרדל</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/צימיצורי" target="_blank" class="recipe-item"><div class="recipe-name">צ'ימיצ'ורי</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/רוטב-פקאנים-לסלט" target="_blank" class="recipe-item"><div class="recipe-name">רוטב פקאנים לסלט</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/רוטב-עגבניות-עם-בזיליקום" target="_blank" class="recipe-item"><div class="recipe-name">רוטב עגבניות עם בזיליקום</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/צאטני-תפוחים" target="_blank" class="recipe-item"><div class="recipe-name">צ'אטני תפוחים</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/רוטב-פטריות-עם-שמנת" target="_blank" class="recipe-item"><div class="recipe-name">רוטב פטריות עם שמנת</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/רוטב-בצל-סגול-לסלט-חסה" target="_blank" class="recipe-item"><div class="recipe-name">רוטב בצל סגול לסלט חסה</div></a>
+            <a href="https://sites.google.com/view/mevashelet/רטבים/רוטב-לסלט" target="_blank" class="recipe-item"><div class="recipe-name">רוטב לסלט</div></a>
+        </div></div>
+            <div class="recipe-item"><div class="recipe-name">צ'ימיצ'ורי</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב פקאנים לסלט</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב עגבניות עם בזיליקום</div></div>
+            <div class="recipe-item"><div class="recipe-name">צ'אטני תפוחים</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב פטריות עם שמנת</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב בצל סגול לסלט חסה</div></div>
+            <div class="recipe-item"><div class="recipe-name">רוטב לסלט</div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCategory(categoryId) {
+    document.getElementById('home').style.display = 'none';
+    document.querySelectorAll('.recipes-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById(categoryId).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+function showHome() {
+    document.getElementById('home').style.display = 'block';
+    document.querySelectorAll('.recipes-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
